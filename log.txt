@@ -88,3 +88,57 @@ Timestamp: Sun Apr 11 2021 13:50:00 GMT-0600 (Mountain Daylight Time)
 URL: /favicon.ico
 Timestamp: Sun Apr 11 2021 13:50:00 GMT-0600 (Mountain Daylight Time)
 
+URL: /
+Timestamp: Mon Apr 12 2021 10:35:03 GMT-0600 (Mountain Daylight Time)
+
+URL: /css/styles.css
+Timestamp: Mon Apr 12 2021 10:35:03 GMT-0600 (Mountain Daylight Time)
+
+URL: /favicon.ico
+Timestamp: Mon Apr 12 2021 10:35:03 GMT-0600 (Mountain Daylight Time)
+
+URL: /
+Timestamp: Mon Apr 12 2021 10:35:11 GMT-0600 (Mountain Daylight Time)
+
+URL: /css/styles.css
+Timestamp: Mon Apr 12 2021 10:35:11 GMT-0600 (Mountain Daylight Time)
+
+URL: /favicon.ico
+Timestamp: Mon Apr 12 2021 10:35:11 GMT-0600 (Mountain Daylight Time)
+
+URL: /
+Timestamp: Mon Apr 12 2021 10:35:24 GMT-0600 (Mountain Daylight Time)
+
+URL: /css/styles.css
+Timestamp: Mon Apr 12 2021 10:35:24 GMT-0600 (Mountain Daylight Time)
+
+URL: /favicon.ico
+Timestamp: Mon Apr 12 2021 10:35:24 GMT-0600 (Mountain Daylight Time)
+
+URL: /
+Timestamp: Mon Apr 12 2021 10:36:56 GMT-0600 (Mountain Daylight Time)
+
+URL: /css/styles.css
+Timestamp: Mon Apr 12 2021 10:36:56 GMT-0600 (Mountain Daylight Time)
+
+URL: /favicon.ico
+Timestamp: Mon Apr 12 2021 10:36:56 GMT-0600 (Mountain Daylight Time)
+
+URL: /documentation
+Timestamp: Mon Apr 12 2021 10:37:19 GMT-0600 (Mountain Daylight Time)
+
+URL: /css/styles.css
+Timestamp: Mon Apr 12 2021 10:37:19 GMT-0600 (Mountain Daylight Time)
+
+URL: /favicon.ico
+Timestamp: Mon Apr 12 2021 10:37:19 GMT-0600 (Mountain Daylight Time)
+
+URL: /documentation
+Timestamp: Mon Apr 12 2021 11:09:05 GMT-0600 (Mountain Daylight Time)
+
+URL: /css/styles.css
+Timestamp: Mon Apr 12 2021 11:09:05 GMT-0600 (Mountain Daylight Time)
+
+URL: /favicon.ico
+Timestamp: Mon Apr 12 2021 11:09:05 GMT-0600 (Mountain Daylight Time)
+
