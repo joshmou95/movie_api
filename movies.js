@@ -1,42 +1,121 @@
 module.exports.topMovies = [
   {
     title: 'Iron Man',
-    director: 'Jon Favreau'
+    description: '',
+    director: {
+      name: 'Jon Favreau',
+      bio: '',
+      birthday: '',
+      deathday: ''
+    },
+    genre: {
+      name: 'Superhero',
+      description: '',
+    },
+    actors: '',
+    imageUrl: '',
+    featured: ''
   },
   {
     title: 'The Incredible Hulk',
-    director: 'Louis Leterrier'
+    description: '',
+    director: {
+      name: 'Louis Leterrier',
+      bio: '',
+      birthday: '',
+      deathday: ''
+    },
+    genre: {
+      name: 'Superhero',
+      description: '',
+    },
+    actors: '',
+    imageUrl: '',
+    featured: ''
   },
   {
     title: 'Iron Man 2',
-    director: 'Jon Favreau'
+    description: '',
+    director: {
+      name: 'Jon Favreau',
+      bio: '',
+      birthday: '',
+      deathday: ''
+    },
+    genre: {
+      name: 'Superhero',
+      description: '',
+    },
+    actors: '',
+    imageUrl: '',
+    featured: ''
   },
   {
     title: 'Thor',
-    director: 'Kenneth Branagh'
+    description: '',
+    director: {
+      name: 'Kenneth Branagh',
+      bio: '',
+      birthday: '',
+      deathday: ''
+    },
+    genre: {
+      name: 'Superhero',
+      description: '',
+    },
+    actors: '',
+    imageUrl: '',
+    featured: ''
   },
   {
     title: 'Captain America: The First Avenger',
-    director: 'Joe Johnston'
+    description: '',
+    director: {
+      name: 'Joe Johnston',
+      bio: '',
+      birthday: '',
+      deathday: ''
+    },
+    genre: {
+      name: 'Superhero',
+      description: '',
+    },
+    actors: '',
+    imageUrl: '',
+    featured: ''
   },
   {
     title: 'Marvel\'s The Avengers',
-    director: 'Joss Whedon'
+    description: '',
+    director: {
+      name: 'Joss Whedon',
+      bio: '',
+      birthday: '',
+      deathday: ''
+    },
+    genre: {
+      name: 'Superhero',
+      description: '',
+    },
+    actors: '',
+    imageUrl: '',
+    featured: ''
   },
   {
     title: 'Thor: The Dark World',
-    director: 'Alan Taylor'
+    description: '',
+    director: {
+      name: 'Alan Taylor',
+      bio: '',
+      birthday: '',
+      deathday: ''
+    },
+    genre: {
+      name: 'Superhero',
+      description: '',
+    },
+    actors: '',
+    imageUrl: '',
+    featured: ''
   },
-  {
-    title: 'Captain America: The Winter Soldier',
-    director: 'Anthony and Joe Russo'
-  },
-  {
-    title: 'Guardians of the Galaxy',
-    director: 'James Gunn'
-  },
-  {
-    title: 'Avengers: Age of Ultron',
-    director: 'Joss Whedon'
-  }
 ];
