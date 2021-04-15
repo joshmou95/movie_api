@@ -148,6 +148,13 @@ let users = [
   }
 ]
 
+let favMovies = [
+  {
+  userid: 1,
+  movieid: 1
+  }
+]
+
 // GET requests - app.METHOD(PATH, HANDLER)
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix');
