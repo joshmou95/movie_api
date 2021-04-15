@@ -1,20 +1,22 @@
 module.exports.topMovies = [
   {
+    id: 1,
     title: 'Iron Man',
     description: '',
+    genre: {
+      id: 1,
+      name: 'Superhero',
+      description: '',
+    },
     director: {
+      id: 1,
       name: 'Jon Favreau',
       bio: '',
       birthday: '',
       deathday: ''
     },
-    genre: {
-      name: 'Superhero',
-      description: '',
-    },
-    actors: '',
     imageUrl: '',
-    featured: ''
+    featured: 'true'
   },
   {
     title: 'The Incredible Hulk',
