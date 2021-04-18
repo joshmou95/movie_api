@@ -219,7 +219,7 @@ let user = users.find((user) => { return user.username === req.params.username }
   res.status(201).send('New movie was added to list of favorites');
 });
 
-app.delete('/users/:username/:faveMovies', (req, res) => {
+app.delete('/users/:username/:favMovies', (req, res) => {
     // return object user.username that matches req.params.username
 let user = users.find((user) => { return user.username === req.params.username });
 
