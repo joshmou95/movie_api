@@ -8,6 +8,7 @@ let  Users = Models.User,
   ExtractJWT = passportJWT.ExtractJwt;
 
 // checks database for a user with the username
+// hash any password entered when logging in before comparing it to the password stored in mongoDB
 passport.use(new LocalStrategy({
   usernameField: 'Username',
   passwordField: 'Password'
@@ -16,10 +17,15 @@ passport.use(new LocalStrategy({
   Users.findOne({ Username: username }, (error, user) => {
     if (error) {
       console.log(error);
+      return callback(error);
     }
     if (!user) {
       console.log('incorrect username');
       return callback(null, false, {message: 'Incorrect username or password.'});
+    }
+    if (!user.validatePassword(password)) {
+      console.log('inncorrect password');
+      return callback(null, false, {message: 'Incorrect password.'});
     }
     console.log('finished');
     return callback(null, user);
