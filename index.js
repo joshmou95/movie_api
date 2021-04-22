@@ -33,7 +33,7 @@ app.use((err, req, res, next) => {
 });
 
 // GET requests - app.METHOD(PATH, HANDLER)
-app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/', (req, res) => {
   res.send('Welcome to myFlix');
 });
 
