@@ -5,7 +5,7 @@ const uuid = require('uuid');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-
+const { check, validationResult } = require('express-validator');
 
 const Models = require('./models');
 
@@ -117,28 +117,44 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   Email: String,
   Birthday: Date
 } */
-app.post('/users', (req, res) => {
+app.post('/users', 
+  // validation logic here for request
+  // Username: isLength min 5, isAlphanumeric
+  // Password: .not().isEmpty, Email: .isEmail
+  [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ], (req, res) => {
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
   // hash any password entered by the user when registering
-  let hashPassword = Users.hashPassword(req.body.Password);
+  let hashedPassword = Users.hashPassword(req.body.Password);
   // check if username already exists
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.Username + 'already exists');
+        // if the user is found, send response that it already exists
+        return res.status(400).send(req.body.Username + ' already exists');
       } else {
         // create new user based on Users schema
         Users
           .create({
             Username: req.body.Username,
-            Password: hashPassword,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
-          .then((user) =>{res.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error: ' + error);
-        })
+          .then((user) => { res.status(201).json(user) })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          });
       }
     })
     .catch((error) => {
@@ -156,7 +172,26 @@ app.post('/users', (req, res) => {
   Email: String, (required)
   Birthday: Date
 }*/
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), 
+  // validation logic here for request
+  // Username: isLength min 5, isAlphanumeric
+  // Password: .not().isEmpty, Email: .isEmail
+  [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ], 
+  
+  (req, res) => {
+
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
   Users.findOneAndUpdate( { Username: req.params.Username }, 
       { $set: {
       Username: req.body.Username,
@@ -225,6 +260,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 });
 
 // listen for requests
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on port ', + port);
 });
