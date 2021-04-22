@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const app = express();
 const mongoose = require('mongoose');
+const cors = require('cors');
+
 
 const Models = require('./models');
 
@@ -16,16 +18,17 @@ mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, 
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common'));
+app.use(cors());
 
 let auth = require('./auth')(app);
 const passport = require('passport');
+const { has } = require('lodash');
 require('./passport');
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
-
 
 // GET requests - app.METHOD(PATH, HANDLER)
 app.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -115,6 +118,8 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   Birthday: Date
 } */
 app.post('/users', (req, res) => {
+  // hash any password entered by the user when registering
+  let hashPassword = Users.hashPassword(req.body.Password);
   // check if username already exists
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
@@ -125,7 +130,7 @@ app.post('/users', (req, res) => {
         Users
           .create({
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
