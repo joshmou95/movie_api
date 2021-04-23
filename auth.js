@@ -1,20 +1,21 @@
-// This has to be the same key used in the JWTStrategy
+// This is the same key used in the JWTStrategy
 const jwtSecret = 'your_jwt_secret';
 
-const jwt = require('jsonwebtoken'),
-  passport = require('passport');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 // local passport file
 require('./passport');
 
-// check the username and password in the body of the request exist in database
-let generateJWTToken = (user) => {
-  return jwt.sign(user, jwtSecret, {
-    subject: user.Username, // This is the username you’re encoding in the JWT
-    expiresIn: '7d', // This specifies that the token will expire in 7 days
-    algorithm: 'HS256' // This is the algorithm used to “sign” or encode the values of the JWT
-  });
-}
+// check if the username and password in the body of the request exists in database
+const generateJWTToken = (user) => jwt.sign(user, jwtSecret, {
+  // This is the username you’re encoding in the JWT
+  subject: user.Username,
+  // This specifies that the token will expire in 7 days
+  expiresIn: '7d',
+  // This is the algorithm used to “sign” or encode the values of the JWT
+  algorithm: 'HS256',
+});
 
 /* POST login. */
 module.exports = (router) => {
@@ -23,16 +24,16 @@ module.exports = (router) => {
       if (error || !user) {
         return res.status(400).json({
           message: 'Something is not right',
-          user: user
+          user,
         });
       }
       req.login(user, { session: false }, (error) => {
         if (error) {
           res.send(error);
         }
-        let token = generateJWTToken(user.toJSON());
+        const token = generateJWTToken(user.toJSON());
         return res.json({ user, token });
       });
     })(req, res);
   });
-}
+};
