@@ -88,8 +88,23 @@
         <td>Allow users to update their user info (username, password, email, date of birth)</td>
         <td>/users/[Username]</td>
         <td>PUT</td>
-        <td>None</td>
-        <td>A JSON object with data about what was updated</td>
+        <td>A JSON object holding data that the user wants to update<br>
+          {<br>
+            Username: String, (required)<br>
+            Password: String, (required)<br>
+            Email: String, (required)<br>
+            Birthday: Date<br>
+          }
+        </td>
+        <td>A JSON object with data about what was updated. 
+          <br>
+          {<br>
+            Username: String, (required)<br>
+            Password: String, (required)<br>
+            Email: String, (required)<br>
+            Birthday: Date<br>
+          }
+        </td>
       </tr>
       <tr>
         <td>Allow users to add a movie to their list of favorites</td>
