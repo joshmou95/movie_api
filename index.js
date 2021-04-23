@@ -1,13 +1,23 @@
 const express = require('express');
+
+// HTTP request logger
 const morgan = require('morgan');
+// body parsing
 const bodyParser = require('body-parser');
-const uuid = require('uuid');
+
 const app = express();
+// ODM (Objext Document Mapper) define objects with schema
 const mongoose = require('mongoose');
+// Enable Cross-Origin Requests
 const cors = require('cors');
+// validates user input
 const { check, validationResult } = require('express-validator');
+// authenticate requests
+const passport = require('passport');
+require('./passport');
 
 const Models = require('./models');
+const auth = require('./auth')(app);
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -15,38 +25,36 @@ const Users = Models.User;
 // local database
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// online database
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common'));
 app.use(cors());
 
-let auth = require('./auth')(app);
-const passport = require('passport');
-const { has } = require('lodash');
-require('./passport');
-
+// default error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
 // GET requests - app.METHOD(PATH, HANDLER)
+// Default landing page
 app.get('/', (req, res) => {
-  res.send('Welcome to myFlix');
+  res.send('Welcome to myFlixDB');
 });
 
 // Gets the list of ALL movies, returns json object
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
-  .then((movies) => {
-    res.status(201).json(movies);
-  })
-  .catch((err) => {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  });
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send(`Error: ${err}`);
+    });
 });
 
 // Gets the data on a single movie by title
@@ -57,19 +65,19 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send(`Error: ${err}`);
     });
 });
 
 // Gets data about a genre by name
 app.get('/movies/genres/:Genre', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Movies.findOne({'Genre.Name': req.params.Genre })
+  Movies.findOne({ 'Genre.Name': req.params.Genre })
     .then((movie) => {
       res.json(movie.Genre);
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send(`Error: ${err}`);
     });
 });
 
@@ -81,11 +89,11 @@ app.get('/movies/director/:Name', passport.authenticate('jwt', { session: false 
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send(`Error: ${err}`);
     });
 });
 
-// Get all users
+// Get list of all users
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
     .then((users) => {
@@ -93,11 +101,11 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send(`Error: ${err}`);
     });
 });
 
-// Get a user by username
+// Get user info by username
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   // find by username
   Users.findOne({ Username: req.params.Username })
@@ -106,65 +114,63 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send(`Error: ${err}`);
     });
 });
 
 // Allows new users to register
-/* expect JSON in this format 
-{ 
-  ID: Integer, 
+/* expect JSON in this format
+{
+  ID: Integer,
   Username: String,
-  Password: String, 
+  Password: String,
   Email: String,
   Birthday: Date
 } */
-app.post('/users', 
+app.post('/users',
   // validation logic here for request
   // Username: isLength min 5, isAlphanumeric
   // Password: .not().isEmpty, Email: .isEmail
   [
-    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username is required').isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
+    check('Email', 'Email does not appear to be valid').isEmail(),
   ], (req, res) => {
     // check the validation object for errors
-    let errors = validationResult(req);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-  // hash any password entered by the user when registering
-  let hashedPassword = Users.hashPassword(req.body.Password);
-  // check if username already exists
-  Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
+    // hash password entered by the user when registering
+    const hashedPassword = Users.hashPassword(req.body.Password);
+    // check if username already exists
+    Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
         // if the user is found, send response that it already exists
-        return res.status(400).send(req.body.Username + ' already exists');
-      } else {
+          return res.status(400).send(`${req.body.Username} already exists`);
+        }
         // create new user based on Users schema
         Users
           .create({
             Username: req.body.Username,
             Password: hashedPassword,
             Email: req.body.Email,
-            Birthday: req.body.Birthday
+            Birthday: req.body.Birthday,
           })
-          .then((user) => { res.status(201).json(user) })
+          .then((user) => { res.status(201).json(user); })
           .catch((error) => {
             console.error(error);
-            res.status(500).send('Error: ' + error);
+            res.status(500).send(`Error: ${error}`);
           });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
-
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send(`Error: ${error}`);
+      });
+  });
 
 // update a users info by username
 /* expect JSON in this format
@@ -173,59 +179,58 @@ app.post('/users',
   Password: String, (required)
   Email: String, (required)
   Birthday: Date
-}*/
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), 
+} */
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   // validation logic here for request
   // Username: isLength min 5, isAlphanumeric
   // Password: .not().isEmpty, Email: .isEmail
   [
-    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username is required').isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
-  ], 
-  
+    check('Email', 'Email does not appear to be valid').isEmail(),
+  ],
+
   (req, res) => {
-
     // check the validation object for errors
-    let errors = validationResult(req);
-
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
 
-  // hash password entered by the user when updating
-  let hashedPassword = Users.hashPassword(req.body.Password);
+    // hash password entered by the user when updating
+    const hashedPassword = Users.hashPassword(req.body.Password);
 
-  Users.findOneAndUpdate( { Username: req.params.Username }, 
-      { $set: {
-      Username: req.body.Username,
-      Password: hashedPassword,
-      Email: req.body.Email,
-      Birthday: req.body.Birthday
+    Users.findOneAndUpdate({ Username: req.params.Username },
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: hashedPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        },
       },
-  },
-  { new: true }, // This line makes sure that the updated document is returned
-  (err, updatedUser) => {
-    if(err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
+      { new: true }, // This line makes sure that the updated document is returned
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send(`Error: ${err}`);
+        } else {
+          res.json(updatedUser);
+        }
+      });
   });
-});
 
 // allows users add a movie to list of favorites
 app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
-     $push: { FavoriteMovies: req.params.MovieID }
-   },
-   { new: true }, // This line makes sure that the updated document is returned
+    $push: { FavoriteMovies: req.params.MovieID },
+  },
+  { new: true }, // This line makes sure that the updated document is returned
   (err, updatedUser) => {
     if (err) {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send(`Error: ${err}`);
     } else {
       res.json(updatedUser);
     }
@@ -235,17 +240,17 @@ app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { sess
 // allows users to remove a movie from a list of favorites
 app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
-    $pull: { FavoriteMovies: req.params.MovieID }
+    $pull: { FavoriteMovies: req.params.MovieID },
   },
   { new: true }, // This line makes sure that the updated document is returned
- (err, updatedUser) => {
-   if (err) {
-     console.error(err);
-     res.status(500).send('Error: ' + err);
-   } else {
-     res.json(updatedUser);
-   }
- });
+  (err, updatedUser) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send(`Error: ${err}`);
+    } else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 // Delete a user by username
@@ -253,19 +258,19 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.Username + ' was not found');
+        res.status(400).send(`${req.params.Username} was not found`);
       } else {
-        res.status(200).send(req.params.Username + ' was deleted.');
+        res.status(200).send(`${req.params.Username} was deleted.`);
       }
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err);
+      res.status(500).send(`Error: ${err}`);
     });
 });
 
 // listen for requests
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
-  console.log('Listening on port ', + port);
+  console.log('Listening on port ', +port);
 });
