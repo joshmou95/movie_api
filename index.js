@@ -17,7 +17,7 @@ const passport = require('passport');
 require('./passport');
 
 const Models = require('./models');
-const auth = require('./auth')(app);
+require('./auth')(app);
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -34,7 +34,7 @@ app.use(morgan('common'));
 app.use(cors());
 
 // default error handling
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
@@ -160,7 +160,7 @@ app.post('/users',
             Email: req.body.Email,
             Birthday: req.body.Birthday,
           })
-          .then((user) => { res.status(201).json(user); })
+          .then((newUser) => { res.status(201).json(newUser); })
           .catch((error) => {
             console.error(error);
             res.status(500).send(`Error: ${error}`);
