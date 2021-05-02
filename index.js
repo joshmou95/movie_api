@@ -199,7 +199,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     }
 
     // hash password entered by the user when updating
-    const hashedPassword = Users.hashPassword(req.body.Password)
+    const hashedPassword = Users.hashPassword(req.user.Password)
 
     Users.findOneAndUpdate({ Username: req.user.Username },
       {
