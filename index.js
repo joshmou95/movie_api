@@ -34,7 +34,7 @@ app.use(morgan('common'))
 app.use(cors())
 
 // default error handling
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).send('Something broke!')
 })
@@ -201,7 +201,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     // hash password entered by the user when updating
     const hashedPassword = Users.hashPassword(req.body.Password)
 
-    Users.findOneAndUpdate({ Username: req.params.Username },
+    Users.findOneAndUpdate({ Username: req.user.Username },
       {
         $set: {
           Username: req.body.Username,
