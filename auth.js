@@ -1,11 +1,11 @@
 // This is the same key used in the JWTStrategy
-const jwtSecret = 'your_jwt_secret';
+const jwtSecret = 'your_jwt_secret'
 
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
+const jwt = require('jsonwebtoken')
+const passport = require('passport')
 
 // local passport file
-require('./passport');
+require('./passport')
 
 // check if the username and password in the body of the request exists in database
 const generateJWTToken = (user) => (
@@ -15,9 +15,9 @@ const generateJWTToken = (user) => (
     // This specifies that the token will expire in 7 days
     expiresIn: '7d',
     // This is the algorithm used to “sign” or encode the values of the JWT
-    algorithm: 'HS256',
+    algorithm: 'HS256'
   })
-);
+)
 
 /* POST login. */
 module.exports = (router) => {
@@ -26,16 +26,16 @@ module.exports = (router) => {
       if (error || !user) {
         return res.status(400).json({
           message: info,
-          user,
-        });
+          user
+        })
       }
       return req.login(user, { session: false }, (reqError) => {
         if (reqError) {
-          res.send(reqError);
+          res.send(reqError)
         }
-        const token = generateJWTToken(user.toJSON());
-        return res.json({ user, token });
-      });
-    })(req, res);
-  });
-};
+        const token = generateJWTToken(user.toJSON())
+        return res.json({ user, token })
+      })
+    })(req, res)
+  })
+}
