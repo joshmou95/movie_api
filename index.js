@@ -151,20 +151,21 @@ app.post('/users',
         if (user) {
         // if the user is found, send response that it already exists
           return res.status(400).send(`${req.body.Username} already exists`)
-        }
+        } else {
         // create new user based on Users schema
-        Users
-          .create({
-            Username: req.body.Username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          })
-          .then((newUser) => { res.status(201).json(newUser) })
-          .catch((error) => {
-            console.error(error)
-            res.status(500).send(`Error: ${error}`)
-          })
+          Users
+            .create({
+              Username: req.body.Username,
+              Password: hashedPassword,
+              Email: req.body.Email,
+              Birthday: req.body.Birthday
+            })
+            .then((newUser) => { res.status(201).json(newUser) })
+            .catch((error) => {
+              console.error(error)
+              res.status(500).send(`Error: ${error}`)
+            })
+        }
       })
       .catch((error) => {
         console.error(error)
@@ -189,11 +190,10 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()
-  ],
-
-  (req, res) => {
+  ], (req, res) => {
     // check the validation object for errors
     const errors = validationResult(req)
+
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() })
     }
@@ -201,7 +201,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     // hash password entered by the user when updating
     const hashedPassword = Users.hashPassword(req.body.Password)
 
-    Users.findOneAndUpdate({ Username: req.user.Username },
+    Users.findOneAndUpdate({ Username: req.params.Username },
       {
         $set: {
           Username: req.body.Username,
