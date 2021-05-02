@@ -10,12 +10,9 @@ require('./passport')
 // check if the username and password in the body of the request exists in database
 const generateJWTToken = (user) => (
   jwt.sign(user, jwtSecret, {
-    // This is the username you’re encoding in the JWT
-    subject: user.Username,
-    // This specifies that the token will expire in 7 days
-    expiresIn: '7d',
-    // This is the algorithm used to “sign” or encode the values of the JWT
-    algorithm: 'HS256'
+    subject: user.Username, // Username encoded with JWT
+    expiresIn: '7d', // The token will expire in 7 days
+    algorithm: 'HS256' // Algorithm used to “sign” or encode the values of the JWT
   })
 )
 
@@ -29,7 +26,7 @@ module.exports = (router) => {
           user
         })
       }
-      return req.login(user, { session: false }, (reqError) => {
+      req.login(user, { session: false }, (reqError) => {
         if (reqError) {
           res.send(reqError)
         }
