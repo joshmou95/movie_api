@@ -255,22 +255,7 @@ app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { se
 
 // Delete a user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
-  // validation logic here for request
-  // Username: isLength min 5, isAlphanumeric
-  // Password: .not().isEmpty, Email: .isEmail
-  [
-    check('Username', 'Username is required').isLength({ min: 5 }),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
-  ], (req, res) => {
-    // check the validation object for errors
-    const errors = validationResult(req)
-
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() })
-    }
-
+  (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
       .then((user) => {
         if (!user) {
