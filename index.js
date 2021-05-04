@@ -23,7 +23,7 @@ const Movies = Models.Movie
 const Users = Models.User
 
 // local database
-// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true })
 
 // online database
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -199,9 +199,11 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     }
 
     // hash password entered by the user when updating
-    const hashedPassword = Users.hashPassword(req.user.Password)
-
-    Users.findOneAndUpdate({ Username: req.user.Username },
+    const hashedPassword = Users.hashPassword(req.params.Password)
+    if (req.user.username !== req.params.username) {
+      return res.status(403)
+    }
+    Users.findOneAndUpdate({ Username: req.params.Username },
       {
         $set: {
           Username: req.body.Username,
@@ -256,6 +258,9 @@ app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { se
 // Delete a user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    if (req.user.username !== req.params.username) {
+      return res.status(403)
+    }
     Users.findOneAndRemove({ Username: req.user.Username })
       .then((user) => {
         if (!user) {
