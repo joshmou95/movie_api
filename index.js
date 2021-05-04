@@ -191,7 +191,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()
   ], (req, res) => {
-    if (req.user.username !== req.params.username) {
+    if (req.params.username !== req.user.username) {
       return res.status(403).send(`Can't change user ${req.params.Username} `)
     }
     // check the validation object for errors
@@ -259,7 +259,7 @@ app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { se
 // Delete a user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    if (req.user.username !== req.params.username) {
+    if (req.params.username !== req.user.username) {
       return res.status(403).send(`Can't delete user ${req.params.Username} `)
     }
     Users.findOneAndRemove({ Username: req.params.Username })
