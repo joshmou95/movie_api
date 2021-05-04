@@ -17,7 +17,6 @@ const passport = require('passport')
 require('./passport')
 
 const Models = require('./models')
-const e = require('express')
 require('./auth')(app)
 
 const Movies = Models.Movie
