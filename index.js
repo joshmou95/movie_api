@@ -193,38 +193,34 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   ],
   (req, res) => {
     // check the validation object for errors
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() })
     }
     // hash password entered by the user when updating
     const hashedPassword = Users.hashPassword(req.body.Password)
-
-    Users.findone({ Username: req.params.Username }, function () {
-      if (req.user.username !== req.params.username) {
-        return res.status(403).send(`Can't delete user ${req.params.Username} `)
-      } else {
-        Users.findOneAndUpdate({ Username: req.params.Username },
-          {
-            $set: {
-              Username: req.body.Username,
-              Password: hashedPassword,
-              Email: req.body.Email,
-              Birthday: req.body.Birthday
-            }
-          },
-          { new: true }, // This line makes sure that the updated document is returned
-          (err, updatedUser) => {
-            if (err) {
-              console.error(err)
-              res.status(500).send(`Error: ${err}`)
-            } else {
-              res.json(updatedUser)
-            }
-          })
-      }
-    })
+    Users.findOneAndUpdate({ Username: req.params.Username },
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: hashedPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        }
+      },
+      { new: true }, // This line makes sure that the updated document is returned
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err)
+          res.status(500).send(`Error: ${err}`)
+        } else {
+          res.json(updatedUser)
+        }
+      })
   })
+
+// if (req.user.username !== req.params.username) {
+//   return res.status(403).send(`Can't delete user ${req.params.Username} `)
 
 // allows users add a movie to list of favorites
 app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -260,24 +256,18 @@ app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { se
 
 // Delete a user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOne({ Username: req.params.Username }, function () {
-    if (req.user.username !== req.params.username) {
-      return res.status(403).send(`Can't delete user ${req.params.Username} `)
-    } else {
-      Users.findOneAndRemove({ Username: req.params.Username })
-        .then((user) => {
-          if (!user) {
-            res.status(400).send(`${req.params.Username} was not found`)
-          } else {
-            res.status(200).send(`${req.params.Username} was deleted.`)
-          }
-        })
-        .catch((err) => {
-          console.error(err)
-          res.status(500).send(`Error: ${err}`)
-        })
-    }
-  })
+  Users.findOneAndRemove({ Username: req.params.Username })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(`${req.params.Username} was not found`)
+      } else {
+        res.status(200).send(`${req.params.Username} was deleted.`)
+      }
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).send(`Error: ${err}`)
+    })
 })
 
 // listen for requests
