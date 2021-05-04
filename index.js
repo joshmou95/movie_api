@@ -191,6 +191,9 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()
   ], (req, res) => {
+    if (req.user.username !== req.params.username) {
+      return res.status(403).send(`Can't change user ${req.params.Username} `)
+    }
     // check the validation object for errors
     const errors = validationResult(req)
 
@@ -201,28 +204,24 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     // hash password entered by the user when updating
     const hashedPassword = Users.hashPassword(req.params.Password)
 
-    if (req.user.username !== req.params.username) {
-      return res.status(403).send(`Can't change user ${req.params.Username} `)
-    } else {
-      Users.findOneAndUpdate({ Username: req.params.Username },
-        {
-          $set: {
-            Username: req.body.Username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          }
-        },
-        { new: true }, // This line makes sure that the updated document is returned
-        (err, updatedUser) => {
-          if (err) {
-            console.error(err)
-            res.status(500).send(`Error: ${err}`)
-          } else {
-            res.json(updatedUser)
-          }
-        })
-    }
+    Users.findOneAndUpdate({ Username: req.params.Username },
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: hashedPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        }
+      },
+      { new: true }, // This line makes sure that the updated document is returned
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err)
+          res.status(500).send(`Error: ${err}`)
+        } else {
+          res.json(updatedUser)
+        }
+      })
   })
 
 // allows users add a movie to list of favorites
@@ -262,20 +261,19 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   (req, res) => {
     if (req.user.username !== req.params.username) {
       return res.status(403).send(`Can't delete user ${req.params.Username} `)
-    } else {
-      Users.findOneAndRemove({ Username: req.params.Username })
-        .then((user) => {
-          if (!user) {
-            res.status(400).send(`${req.params.Username} was not found`)
-          } else {
-            res.status(200).send(`${req.params.Username} was deleted.`)
-          }
-        })
-        .catch((err) => {
-          console.error(err)
-          res.status(500).send(`Error: ${err}`)
-        })
     }
+    Users.findOneAndRemove({ Username: req.params.Username })
+      .then((user) => {
+        if (!user) {
+          res.status(400).send(`${req.params.Username} was not found`)
+        } else {
+          res.status(200).send(`${req.params.Username} was deleted.`)
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+        res.status(500).send(`Error: ${err}`)
+      })
   })
 
 // listen for requests
