@@ -23,10 +23,10 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // local database
-// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // online database
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -192,6 +192,10 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     check('Email', 'Email does not appear to be valid').isEmail()
   ],
   (req, res) => {
+    // authorizes that logged in user is the user making changes
+    if (req.user.Username !== req.params.Username) {
+      return res.status(403).send(`You're not authorized to change ${req.params.Username} info`);
+    }
     // check the validation object for errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -219,56 +223,71 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       });
   });
 
-// if (req.user.username !== req.params.username) {
-//   return res.status(403).send(`Can't delete user ${req.params.Username} `)
-
 // allows users add a movie to list of favorites
-app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
-    $push: { FavoriteMovies: req.params.MovieID }
-  },
-  { new: true }, // This line makes sure that the updated document is returned
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send(`Error: ${err}`);
-    } else {
-      res.json(updatedUser);
+app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // authorizes that logged in user is the user making changes
+    if (req.user.Username !== req.params.Username) {
+      return res.status(403).send('You\'re not authorized to make changes other users favorites');
     }
-  });
-});
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+      $push: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true }, // This line makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send(`Error: ${err}`);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+  }
+);
 
 // allows users to remove a movie from a list of favorites
-app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
-    $pull: { FavoriteMovies: req.params.MovieID }
-  },
-  { new: true }, // This line makes sure that the updated document is returned
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send(`Error: ${err}`);
-    } else {
-      res.json(updatedUser);
+app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // authorizes that logged in user is the user making changes
+    if (req.user.Username !== req.params.Username) {
+      return res.status(403).send('You\'re not authorized to make changes other users favorites');
     }
-  });
-});
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+      $pull: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true }, // This line makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send(`Error: ${err}`);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+  }
+);
 
 // Delete a user by username
-app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndRemove({ Username: req.params.Username })
-    .then((user) => {
-      if (!user) {
-        res.status(400).send(`${req.params.Username} was not found`);
-      } else {
-        res.status(200).send(`${req.params.Username} was deleted.`);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send(`Error: ${err}`);
-    });
-});
+app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // authorizes that logged in user is the user making changes
+    if (req.user.Username !== req.params.Username) {
+      return res.status(403).send(`You're not authorized to delete user ${req.params.Username} `);
+    }
+    Users.findOneAndRemove({ Username: req.params.Username })
+      .then(user => {
+        if (!user) {
+          res.status(400).send(`${req.params.Username} was not found`);
+        } else {
+          res.status(200).send(`${req.params.Username} was deleted.`);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).send(`Error: ${err}`);
+      });
+  }
+);
 
 // listen for requests
 const port = process.env.PORT || 8080;
