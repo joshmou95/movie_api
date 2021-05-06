@@ -28,10 +28,10 @@ const Users = Models.User;
 // online database
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common'));
-app.use(cors());
 
 // default error handling
 app.use((err, req, res, next) => {
@@ -46,16 +46,20 @@ app.get('/', (req, res) => {
 });
 
 // Gets the list of ALL movies, returns json object
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Movies.find()
-    .then((movies) => {
-      res.status(201).json(movies);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send(`Error: ${err}`);
-    });
-});
+app.get('/movies',
+  // temporarily commented out for testing with react
+  // passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Movies.find()
+      .then((movies) => {
+        res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send(`Error: ${err}`);
+      });
+  }
+);
 
 // Gets the data on a single movie by title
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
