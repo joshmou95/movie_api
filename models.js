@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 // define schema of movies
 const movieSchema = mongoose.Schema({
@@ -15,9 +15,9 @@ const movieSchema = mongoose.Schema({
   Actors: [String],
   ImagePath: String,
   Featured: Boolean
-})
-const bcrypt = require('bcrypt')
-require('passport')
+});
+const bcrypt = require('bcrypt');
+require('passport');
 
 // define schema of users
 const userSchema = mongoose.Schema({
@@ -26,18 +26,18 @@ const userSchema = mongoose.Schema({
   Email: { type: String, required: true },
   Birthday: Date,
   FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
-})
+});
 
 userSchema.statics.hashPassword = (password) => {
-  return bcrypt.hashSync(password, 10)
-}
+  return bcrypt.hashSync(password, 10);
+};
 
 userSchema.methods.validatePassword = function (password) {
-  return bcrypt.compareSync(password, this.Password)
-}
+  return bcrypt.compareSync(password, this.Password);
+};
 
-const Movie = mongoose.model('Movie', movieSchema)
-const User = mongoose.model('User', userSchema)
+const Movie = mongoose.model('Movie', movieSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports.Movie = Movie
-module.exports.User = User
+module.exports.Movie = Movie;
+module.exports.User = User;
