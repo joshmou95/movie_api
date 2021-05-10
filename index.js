@@ -23,10 +23,10 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // local database
-// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // online database
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -52,7 +52,7 @@ app.get('/movies',
   (req, res) => {
     Movies.find()
       .then((movies) => {
-        res.status(201).json(movies);
+        res.status(200).json(movies);
       })
       .catch((err) => {
         console.error(err);
@@ -101,7 +101,7 @@ app.get('/movies/director/:Name', passport.authenticate('jwt', { session: false 
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
     .then((users) => {
-      res.status(201).json(users);
+      res.status(200).json(users);
     })
     .catch((err) => {
       console.error(err);
