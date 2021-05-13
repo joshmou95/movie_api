@@ -47,8 +47,7 @@ app.get('/', (req, res) => {
 
 // Gets the list of ALL movies, returns json object
 app.get('/movies',
-  // temporarily commented out for testing with react
-  // passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Movies.find()
       .then((movies) => {
