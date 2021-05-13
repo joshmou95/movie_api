@@ -22,12 +22,6 @@ require('./auth')(app);
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// local database
-// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-
-// online database
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -38,6 +32,12 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+
+// local database
+// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// online database
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
