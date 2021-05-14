@@ -1,5 +1,6 @@
 const express = require('express');
-
+// Enable Cross-Origin Requests
+const cors = require('cors');
 // HTTP request logger
 const morgan = require('morgan');
 // body parsing
@@ -8,8 +9,7 @@ const bodyParser = require('body-parser');
 const app = express();
 // ODM (Objext Document Mapper) define objects with schema
 const mongoose = require('mongoose');
-// Enable Cross-Origin Requests
-const cors = require('cors');
+
 // validates user input
 const { check, validationResult } = require('express-validator');
 // authenticate requests
