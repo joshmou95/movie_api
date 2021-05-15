@@ -1,8 +1,15 @@
+const express = require('express');
+
 // This is the same key used in the JWTStrategy
 const jwtSecret = 'your_jwt_secret';
 
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const cors = require('cors');
+
+const app = express();
+
+app.use(cors());
 
 // local passport file
 require('./passport');
