@@ -1,6 +1,9 @@
-const express = require('express');
 // Enable Cross-Origin Requests
 const cors = require('cors');
+
+const express = require('express');
+// validates user input
+const { check, validationResult } = require('express-validator');
 // HTTP request logger
 const morgan = require('morgan');
 // body parsing
@@ -10,8 +13,6 @@ const app = express();
 // ODM (Objext Document Mapper) define objects with schema
 const mongoose = require('mongoose');
 
-// validates user input
-const { check, validationResult } = require('express-validator');
 // authenticate requests
 const passport = require('passport');
 require('./passport');
@@ -21,6 +22,21 @@ require('./auth')(app);
 
 const Movies = Models.Movie;
 const Users = Models.User;
+
+// Configure and run CORS
+const allowedOrigins = ['https://myflixdb2000.herokuapp.com'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+};
+
+app.use(cors(corsOptions));
 
 app.use(cors());
 app.use(bodyParser.json());
