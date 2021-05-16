@@ -1,7 +1,6 @@
+const express = require('express');
 // Enable Cross-Origin Requests
 const cors = require('cors');
-
-const express = require('express');
 // validates user input
 const { check, validationResult } = require('express-validator');
 // HTTP request logger
