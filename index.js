@@ -42,20 +42,22 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
 app.get('/', (req, res) => {
-  res.send('Welcome to myFlixDB');
+  return res.status(400).send('Welcome to myFlixDB');
 });
 
 // Gets the list of ALL movies, returns json object
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Movies.find()
-    .then((movies) => {
-      res.status(200).json(movies);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send(`Error: ${err}`);
-    });
-});
+app.get('/movies',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Movies.find()
+      .then((movies) => {
+        res.status(200).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send(`Error: ${err}`);
+      });
+  });
 
 // Gets the data on a single movie by title
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
