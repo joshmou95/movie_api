@@ -1,27 +1,20 @@
-const express = require('express');
-
 // This is the same key used in the JWTStrategy
 const jwtSecret = 'your_jwt_secret';
 
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const cors = require('cors');
-
-const app = express();
-
-app.use(cors());
 
 // local passport file
 require('./passport');
 
 // check if the username and password in the body of the request exists in database
-const generateJWTToken = (user) => (
-  jwt.sign(user, jwtSecret, {
+const generateJWTToken = (user) => {
+  return jwt.sign(user, jwtSecret, {
     subject: user.Username, // Username encoded with JWT
     expiresIn: '7d', // The token will expire in 7 days
     algorithm: 'HS256' // Algorithm used to “sign” or encode the values of the JWT
-  })
-);
+  });
+};
 
 /* POST login. */
 module.exports = (router) => {
