@@ -23,25 +23,10 @@ require('./auth')(app);
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// Configure and run CORS
-const allowedOrigins = ['https://myflixdb2000.herokuapp.com'];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
-      return callback(new Error(message), false);
-    }
-    return callback(null, true);
-  }
-};
-
-app.use(cors(corsOptions));
-
-app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common'));
+app.use(cors());
 
 // default error handling
 app.use((err, req, res, next) => {
