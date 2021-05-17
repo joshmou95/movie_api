@@ -22,10 +22,10 @@ require('./auth')(app);
 const Movies = Models.Movie;
 const Users = Models.User;
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common'));
-app.use(cors());
 app.use(express.json());
 
 // default error handling
