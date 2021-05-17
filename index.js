@@ -42,8 +42,9 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
-app.get('/', (req, res) => {
-  return res.status(400).send('Welcome to myFlixDB');
+app.get('/', function (req, res, next) {
+  res.json({ msg: 'This is CORS-enabled for all origins!' });
+  res.status(400).send('Welcome to myFlixDB');
 });
 
 // Gets the list of ALL movies, returns json object
@@ -294,6 +295,6 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 
 // listen for requests
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, function () {
   console.log('Listening on port ', +port);
 });
