@@ -55,12 +55,11 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
 app.get('/', function (req, res, next) {
-  res.json({ msg: 'This is CORS-enabled for all origins!' });
   res.status(400).send('Welcome to myFlixDB');
 });
 
 // Gets the list of ALL movies, returns json object
-app.get('/movies', headers,
+app.get('/movies', cors(), headers,
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Movies.find()
