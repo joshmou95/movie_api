@@ -22,18 +22,17 @@ require('./auth')(app);
 const Movies = Models.Movie;
 const Users = Models.User;
 
-const headers = (req, res, next) => {
-  const origin = (req.headers.origin === 'http://localhost:1234') ? 'http://localhost:8080' : 'https://myflixdb2000.herokuapp.com';
-  res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-};
+// const headers = (req, res, next) => {
+//   const origin = (req.headers.origin === 'http://localhost:1234') ? 'http://localhost:8080' : 'https://myflixdb2000.herokuapp.com';
+//   res.header('Access-Control-Allow-Origin', origin);
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// };
+//
+// module.exports = headers;
 
-module.exports = headers;
-
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -54,12 +53,12 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
-app.get('/', function (req, res, next) {
+app.get('/', cors(), function (req, res, next) {
   res.status(400).send('Welcome to myFlixDB');
 });
 
 // Gets the list of ALL movies, returns json object
-app.get('/movies', cors(), headers,
+app.get('/movies', cors(),
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Movies.find()
