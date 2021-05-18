@@ -22,11 +22,17 @@ require('./auth')(app);
 const Movies = Models.Movie;
 const Users = Models.User;
 
-const corsOptions = {
-  origin: 'http://localhost:1234',
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:1234');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+// const corsOptions = {
+//   origin: 'http://localhost:1234',
+//   optionsSuccessStatus: 200
+// };
+// app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use(bodyParser.json());
