@@ -33,6 +33,7 @@ const Users = Models.User;
 // module.exports = headers;
 
 // app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 
 app.use(bodyParser.json());
