@@ -22,17 +22,16 @@ require('./auth')(app);
 const Movies = Models.Movie;
 const Users = Models.User;
 
-app.use(cors());
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+app.use(express.json());
+
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common'));
-app.use(express.json());
-
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:1234');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
 
 // default error handling
 app.use((err, req, res, next) => {
