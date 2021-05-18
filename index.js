@@ -22,17 +22,18 @@ require('./auth')(app);
 const Movies = Models.Movie;
 const Users = Models.User;
 
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:1234');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+const headers = (req, res, next) => {
+  const origin = (req.headers.origin === 'http://localhost:1234') ? 'http://localhost:8080' : 'https://myflixdb2000.herokuapp.com';
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
   next();
-});
+};
 
-// const corsOptions = {
-//   origin: 'http://localhost:1234',
-//   optionsSuccessStatus: 200
-// };
-// app.use(cors(corsOptions));
+module.exports = headers;
+
+app.use(cors());
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -53,7 +54,7 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
-app.get('/', function (req, res, next) {
+app.get('/', headers, function (req, res, next) {
   res.json({ msg: 'This is CORS-enabled for all origins!' });
   res.status(400).send('Welcome to myFlixDB');
 });
