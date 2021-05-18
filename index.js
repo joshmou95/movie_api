@@ -23,7 +23,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 const corsOptions = {
-  origin: '*',
+  origin: 'http://localhost:1234',
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
