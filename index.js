@@ -1,17 +1,17 @@
 const express = require('express');
-// Enable Cross-Origin Requests
-const cors = require('cors');
 // validates user input
 const { check, validationResult } = require('express-validator');
 // HTTP request logger
 const morgan = require('morgan');
 // body parsing
 const bodyParser = require('body-parser');
+// Enable Cross-Origin Requests
+const cors = require('cors');
 
-const app = express();
 // ODM (Objext Document Mapper) define objects with schema
 const mongoose = require('mongoose');
 
+const app = express();
 // authenticate requests
 const passport = require('passport');
 require('./passport');
@@ -34,12 +34,13 @@ const Users = Models.User;
 //     return callback(null, true);
 //   }
 // }));
-app.use(cors({ credentials: true, origin: true }));
+
 // app.use(cors());
 
 app.use(express.json());
-
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.static('public'));
 app.use(morgan('common'));
 
