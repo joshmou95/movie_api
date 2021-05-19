@@ -34,8 +34,8 @@ const Users = Models.User;
 //     return callback(null, true);
 //   }
 // }));
-
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
+// app.use(cors());
 
 app.use(express.json());
 
