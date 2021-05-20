@@ -35,6 +35,13 @@ const Users = Models.User;
 //   }
 // }));
 
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors());
+app.use(express.static('public'));
+app.use(morgan('common'));
+
 app.use((req, res, next) => {
   const allowedOrigins = ['http://localhost:1234', 'http://localhost:8080', 'https://myflixdb2000.herokuapp.com'];
   const origin = req.headers.origin;
@@ -46,13 +53,6 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', true);
   return next();
 });
-
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cors());
-app.use(express.static('public'));
-app.use(morgan('common'));
 
 // default error handling
 app.use((err, req, res, next) => {
