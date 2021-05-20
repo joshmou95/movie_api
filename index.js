@@ -35,14 +35,16 @@ const Users = Models.User;
 //   }
 // }));
 
-// Add Access Control Allow Origin headers
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1234');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
+  const allowedOrigins = ['http://localhost:1234', 'http://localhost:8080', 'https://myflixdb2000.herokuapp.com'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', true);
+  return next();
 });
 
 app.use(express.json());
