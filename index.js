@@ -27,13 +27,11 @@ const allowedOrigins = [
 ];
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin (origin, callback) {
       if (!origin) return callback(null, true);
       if (allowedOrigins.indexOf(origin) === -1) {
         // If an origin is not on the list of allowed origins
-        const message =
-          'The CORS policy for this application does not allow access from origin ' +
-          origin;
+        const message = 'The CORS policy for this application does not allow access from origin ' + origin;
         return callback(new Error(message), false);
       }
       return callback(null, true);
