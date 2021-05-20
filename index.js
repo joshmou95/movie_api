@@ -43,7 +43,7 @@ app.use(express.static('public'));
 app.use(morgan('common'));
 
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://localhost:1234', 'http://localhost:8080', 'https://myflixdb2000.herokuapp.com'];
+  const allowedOrigins = ['https://myflixdb2000.herokuapp.com', 'http://localhost:1234', 'http://localhost:8080'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
