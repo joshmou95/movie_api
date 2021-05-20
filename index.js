@@ -58,12 +58,6 @@ app.use((err, req, res, next) => {
 // online database
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://myflixdb2000.herokuapp.com/');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
 app.get('/', function (req, res, next) {
