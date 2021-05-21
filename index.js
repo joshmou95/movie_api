@@ -23,7 +23,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 const allowedOrigins = [
-  'https://myflixdb2000.herokuapp.com/', 'http://localhost:8080/', 'http://localhost:1234/'
+  'http://localhost:8080', 'https://myflixdb2000.herokuapp.com','http://localhost:1234'
 ];
 app.use(
   cors({
@@ -31,7 +31,7 @@ app.use(
       if (!origin) return callback(null, true);
       if (allowedOrigins.indexOf(origin) === -1) {
         // If an origin is not on the list of allowed origins
-        const message = 'The CORS policy for this application does not allow access from origin ' + origin;
+        const message = 'The CORS policy for this application does NOT allow access from origin ' + origin;
         return callback(new Error(message), false);
       }
       return callback(null, true);
@@ -60,7 +60,7 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
-app.get('/', function (req, res, next) {
+app.get('/', cors(), function (req, res, next) {
   res.status(400).send('Welcome to myFlixDB');
 });
 
