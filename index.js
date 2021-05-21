@@ -23,7 +23,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 const allowedOrigins = [
-  'http://localhost:8080', 'https://myflixdb2000.herokuapp.com','http://localhost:1234'
+  'http://localhost:8080', 'https://myflixdb2000.herokuapp.com', 'http://localhost:1234'
 ];
 app.use(
   cors({
