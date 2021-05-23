@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require('express');
 // validates user input
 const { check, validationResult } = require('express-validator');
@@ -6,7 +7,6 @@ const morgan = require('morgan');
 // body parsing
 const bodyParser = require('body-parser');
 // Enable Cross-Origin Requests
-const cors = require('cors');
 
 // ODM (Objext Document Mapper) define objects with schema
 const mongoose = require('mongoose');
@@ -60,7 +60,7 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 
 // GET requests - app.METHOD(PATH, HANDLER)
 // Default landing page
-app.get('/', cors(), function (req, res, next) {
+app.get('/', (req, res) => {
   res.status(400).send('Welcome to myFlixDB');
 });
 
