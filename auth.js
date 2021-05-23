@@ -1,11 +1,10 @@
-// This is the same key used in the JWTStrategy
-const jwtSecret = 'your_jwt_secret';
-
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-
 // local passport file
 require('./passport');
+
+// This is the same key used in the JWTStrategy
+const jwtSecret = 'your_jwt_secret';
 
 // check if the username and password in the body of the request exists in database
 const generateJWTToken = (user) => {
