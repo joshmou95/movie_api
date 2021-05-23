@@ -1,18 +1,11 @@
 const cors = require('cors');
 const express = require('express');
-// validates user input
 const { check, validationResult } = require('express-validator');
-// HTTP request logger
 const morgan = require('morgan');
-// body parsing
 const bodyParser = require('body-parser');
-// Enable Cross-Origin Requests
-
-// ODM (Objext Document Mapper) define objects with schema
 const mongoose = require('mongoose');
 
 const app = express();
-// authenticate requests
 const passport = require('passport');
 require('./passport');
 
