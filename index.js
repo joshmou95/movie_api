@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // app.use(cors());
-const allowedOrigins = ['http://localhost:8080', 'https://myflixdb2000.herokuapp.com', 'http://localhost:1234', 'https://myflixmcu.netlify.app'];
+const allowedOrigins = ['http://localhost:8080', 'https://myflixdb2000.herokuapp.com', 'http://localhost:1234', 'https://myflixmcu.netlify.app', 'https://myflixmcu.netlify.app/login'];
 
 app.use(cors({
   origin: (origin, callback) => {
