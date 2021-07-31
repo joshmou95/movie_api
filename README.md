@@ -12,6 +12,8 @@ Whenever users of myFlix are interacting with the application, the server-side o
 
 Movie enthusiasts want to be able to access information about different movies, directors, and genres. The server-side of the myFlix application will ensure they have access to this information, that their requests can be processed, and that all necessary data can be stored.
 
+![myflix screenshot](https://user-images.githubusercontent.com/80426764/127749363-831e1a2d-b19f-4e63-a429-9bca4b95dcec.png)
+
 ### Essential Features<br>
 ● Return a list of ALL movies to the user<br>
 ● Return data (description, genre, director, image URL) about a single movie by title to the user<br>
