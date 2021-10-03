@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // app.use(cors());
-const allowedOrigins = ['http://localhost:8080', 'https://myflixdb2000.herokuapp.com', 'http://localhost:1234', 'https://myflixmcu.netlify.app', 'https://myflixmcu.netlify.app/login'];
+const allowedOrigins = ['http://localhost:8080', 'http://localhost:4200', 'https://myflixdb2000.herokuapp.com', 'http://localhost:1234', 'https://myflixmcu.netlify.app', 'https://myflixmcu.netlify.app/login'];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -58,8 +58,7 @@ app.get('/', (req, res) => {
 
 // Gets the list of ALL movies, returns json object
 app.get('/movies',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+  passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
       .then((movies) => {
         res.status(200).json(movies);
