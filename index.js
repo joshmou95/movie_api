@@ -307,7 +307,8 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 //   console.log('Listening on port ', +port);
 // });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || '8080';
+app.set('port', port);
 app.listen(port, '0.0.0.0', () => {
   console.log(`CORS enabled web server listening on port: ${port}`);
 });
