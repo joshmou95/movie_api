@@ -6,7 +6,13 @@ require('./passport');
 // This is the same key used in the JWTStrategy
 const jwtSecret = 'your_jwt_secret';
 
-// check if the username and password in the body of the request exists in database
+/**
+ * check if the username and password in the body of the request exists in database
+ * @constant
+ * @type {string}
+ * @param {*} user username
+ * @returns token
+ */
 const generateJWT = (user) => {
   return jwt.sign(user, jwtSecret, {
     subject: user.Username, // Username encoded with JWT
@@ -15,6 +21,10 @@ const generateJWT = (user) => {
   });
 };
 
+/**
+ * authenticates user login
+ * @param {*} router login
+ */
 const router = (router) => {
   router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {
@@ -40,24 +50,3 @@ const router = (router) => {
 };
 
 module.exports = router;
-
-// old code POST login.
-// module.exports = (router) => {
-//   router.post('/login', (req, res) => {
-//     passport.authenticate('local', { session: false }, (error, user, info) => {
-//       if (error || !user) {
-//         return res.status(400).json({
-//           message: info,
-//           user
-//         });
-//       }
-//       req.login(user, { session: false }, (reqError) => {
-//         if (reqError) {
-//           res.send(reqError);
-//         }
-//         const token = generateJWT(user.toJSON());
-//         return res.json({ user, token });
-//       });
-//     })(req, res);
-//   });
-// };

@@ -7,8 +7,10 @@ const Users = Models.User;
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
-// checks database for a user with the username
-// hash any password entered when logging in before comparing it to the password stored in mongoDB
+/**
+ * checks database for a user with the username
+ * hash any password entered when logging in before comparing it to the password stored in mongoDB
+ */
 passport.use(new LocalStrategy({
   usernameField: 'Username',
   passwordField: 'Password'
@@ -35,8 +37,10 @@ passport.use(new LocalStrategy({
   });
 }));
 
-// Authenticate users based on the JWT submitted
-// JWT is extracted from the header of the http request
+/**
+ * Authenticate users based on the JWT submitted
+ * JWT is extracted from the header of the http request
+ */
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: 'your_jwt_secret'

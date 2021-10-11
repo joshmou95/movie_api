@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-// app.use(cors());
 const allowedOrigins = ['http://localhost:8080', 'http://localhost:4200', 'https://joshmou95.github.io', 'https://myflixdb2000.herokuapp.com', 'http://localhost:1234', 'https://myflixmcu.netlify.app', 'https://myflixmcu.netlify.app/login'];
 
 app.use(cors({
@@ -38,7 +37,9 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(morgan('common'));
 
-// default error handling
+/**
+ * default error handling
+ */
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
@@ -50,13 +51,18 @@ app.use((err, req, res, next) => {
 // online database
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// GET requests - app.METHOD(PATH, HANDLER)
-// Default landing page
+/**
+ * GET requests - app.METHOD(PATH, HANDLER)
+ * Default landing page
+ */
 app.get('/', (req, res) => {
   res.status(400).send('Welcome to myFlixDB');
 });
 
-// Gets the list of ALL movies, returns json object
+/**
+ * Gets the list of ALL movies, returns json object
+ * @returns {object} movies
+ */
 app.get('/movies',
   passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
@@ -69,7 +75,11 @@ app.get('/movies',
       });
   });
 
-// Gets the data on a single movie by title
+/**
+ * Gets the data on a single movie by title
+ * @param {string} Title
+ * @returns {object} movie by title
+ */
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((title) => {
@@ -81,7 +91,11 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
     });
 });
 
-// Gets data about a genre by name
+/**
+ * Gets data about a genre by name
+ * @param {string} Genre
+ * @returns {object} genre
+ */
 app.get('/movies/genres/:Genre', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.Genre })
     .then((movie) => {
@@ -93,7 +107,11 @@ app.get('/movies/genres/:Genre', passport.authenticate('jwt', { session: false }
     });
 });
 
-// Gets data about a director by name
+/**
+ * Gets data about a director by name
+ * @param {string} Name
+ * @returns {object} director
+ */
 app.get('/movies/director/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Director.Name': req.params.Name })
     .then((director) => {
@@ -105,7 +123,10 @@ app.get('/movies/director/:Name', passport.authenticate('jwt', { session: false 
     });
 });
 
-// Get list of all users
+/**
+ * Get list of all users with token in header
+ * @returns {object} users
+ */
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
     .then((users) => {
@@ -117,7 +138,11 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
     });
 });
 
-// Get user info by username
+/**
+ * Get user info by username with token in header
+ * @param {string} Username
+ * @returns {object} user
+ */
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   // find by username
   Users.findOne({ Username: req.params.Username })
@@ -130,8 +155,8 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
     });
 });
 
-// Allows new users to register
-/* expect JSON in this format
+/*
+expect JSON in this format
 {
   ID: Integer,
   Username: String,
@@ -139,6 +164,11 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   Email: String,
   Birthday: Date
 } */
+/**
+ * Allows new users to register
+ * @param {object} user
+ * @returns {object} user
+ */
 app.post('/users',
   // validation logic here for request
   // Username: isLength min 5, isAlphanumeric
@@ -185,7 +215,6 @@ app.post('/users',
       });
   });
 
-// update a users info by username
 /* expect JSON in this format
 {
   Username: String, (required)
@@ -193,6 +222,12 @@ app.post('/users',
   Email: String, (required)
   Birthday: Date
 } */
+/**
+ * update a users info by username
+ * @param {string} Username
+ * @param {object} User
+ * @returns {object} user
+ */
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
   // validation logic here for request
   // Username: isLength min 5, isAlphanumeric
@@ -235,7 +270,12 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
       });
   });
 
-// allows users add a movie to list of favorites
+/**
+ * allows users add a movie to list of favorites
+ * @param {string} Username
+ * @param {string} MovieID
+ * @returns {object} User
+ */
 app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // authorizes that logged in user is the user making changes
@@ -257,7 +297,12 @@ app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { sess
   }
 );
 
-// allows users to remove a movie from a list of favorites
+/**
+ * allows users to remove a movie from a list of favorites
+ * @param {string} Username
+ * @param {string} MovieID
+ * @returns {object} User
+ */
 app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // authorizes that logged in user is the user making changes
@@ -279,7 +324,11 @@ app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { se
   }
 );
 
-// Delete a user by username
+/**
+ * Delete a user by username
+ * @param {sting} Username
+ * @returns {string} message
+ */
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // authorizes that logged in user is the user making changes
@@ -301,12 +350,9 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
   }
 );
 
-// listen for requests
-// const port = process.env.PORT || 8080;
-// app.listen(port, function () {
-//   console.log('Listening on port ', +port);
-// });
-
+/**
+ * listen for requests
+ */
 const port = process.env.PORT || '8080';
 app.set('port', port);
 app.listen(port, '0.0.0.0', () => {

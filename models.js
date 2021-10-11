@@ -21,7 +21,9 @@ const movieSchema = mongoose.Schema({
 const bcrypt = require('bcrypt');
 require('passport');
 
-// define schema of users
+/**
+ * define schema of users
+ */
 const userSchema = mongoose.Schema({
   Username: { type: String, required: true },
   Password: { type: String, required: true },
