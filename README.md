@@ -14,13 +14,25 @@ Movie enthusiasts want to be able to access information about different movies, 
 
 ![myflix screenshot](https://user-images.githubusercontent.com/80426764/127749363-831e1a2d-b19f-4e63-a429-9bca4b95dcec.png)
 
-### Essential Features<br>
-● Return a list of ALL movies to the user<br>
-● Return data (description, genre, director, image URL) about a single movie by title to the user<br>
-● Return data about a genre (description) by name/title (e.g., “Thriller”)<br>
-● Return data about a director (bio, birth year) by name<br>
-● Allow new users to register<br>
-● Allow users to update their user info (username, password, email, date of birth)<br>
-● Allow users to add a movie to their list of favorites<br>
-● Allow users to remove a movie from their list of favorites<br>
-● Allow existing users to deregister<br>
+## Essential Features<br>
+* Return a list of ALL movies to the user<br>
+* Return data (description, genre, director, image URL) about a single movie by title to the user<br>
+* Return data about a genre (description) by name/title (e.g., “Thriller”)<br>
+* Return data about a director (bio, birth year) by name<br>
+* Allow new users to register<br>
+* Allow users to update their user info (username, password, email, date of birth)<br>
+* Allow users to add a movie to their list of favorites<br>
+* Allow users to remove a movie from their list of favorites<br>
+* Allow existing users to deregister<br>
+
+## Technical Requirements
+* The API must be a Node.js and Express application.
+* The API must use REST architecture, with URL endpoints corresponding to the data operations listed above
+* The API must use at least three middleware modules, such as the body-parser package for reading data from requests and morgan for logging.
+* The API must use a “package.json” file.
+* The database must be built using MongoDB.
+* The business logic must be modeled with Mongoose.
+* The API must provide movie information in JSON format.
+* The API must include user authentication and authorization code.
+* The API must include data validation logic.
+* The API must meet data security regulations.
