@@ -23,7 +23,7 @@ const generateJWT = (user) => {
 
 /**
  * authenticates user login
- * @param {*} router login
+ * @param {string} router login
  */
 const router = (router) => {
   router.post('/login', (req, res) => {
