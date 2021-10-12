@@ -43,20 +43,8 @@ Movie enthusiasts want to be able to access information about different movies, 
 |Return data about a single movie by title to the user|/movies/[Title]|GET|None|A JSON object holding data about a single movie containing description, genre, director, image URL, whether it’s featured or not|
 |Return data about a genre (description) by name|/movies/genres/[Name]|GET|None|A JSON object holding data about the genre by the title and description|
 |Return data about a director by name|/movies/director/[Name]|GET|None|A JSON object holding data about a director containing bio, birth year, death year|
-|Allow new users to register|/users|POST|A JSON object holding data about the user to add including username, password, email, firstName, lastName, and movies|A JSON object holding data about the user to added including an ID|
-|Allow users to update their user info (username, password, email, date of birth)|/users/[Username]|PUT|A JSON object holding data that the user wants to update
-          
-            Username: String, (required)
-            Password: String, (required)
-            Email: String, (required)
-            Birthday: Date|A JSON object with data about what was updated. 
-          
-          
-            Username: String, (required)
-            Password: String, (required)
-            Email: String, (required)
-            Birthday: Date|
+|Allow new users to register|/users|POST|A JSON object holding data about the user to add including username, password, email, and birthday|A JSON object holding data about the user to added including an ID and Favorite Movies|
+|Allow users to update their user info (username, password, email, date of birth)|/users/[Username]|PUT|A JSON object holding data that the user wants to update including username, password, email, and birthday|A JSON object with data about what was updated including username, password, email, and birthday|
 |Allow users to add a movie to their list of favorites|/users/[Username]/Movies/[MovieID]|POST|None|A JSON object with added movie ID in FavoriteMovies array|
 |Allow users to remove a movie from their list of favorites|/users/[Username]/Movies/[MovieID]|DELETE|None|A JSON object with data that was removed from MovieFavorites|
 |Allow existing users to deregister|/users/[Username]|DELETE|None|A text message indicating the user has been removed|
-
